@@ -1,19 +1,18 @@
-from django.conf import settings
+import json
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
-from django.core.mail import EmailMultiAlternatives
-from django.http import HttpResponseRedirect
+from django.core import serializers
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
 from cards.forms import EmailUserCreationForm
 from cards.models import Card, WarGame
+from cards.utils import get_random_comic
 
 
 def home(request):
-    data = {
-        'cards': Card.objects.all()
-    }
-
-    return render(request, 'cards.html', data)
+    return render(request, 'cards.html', {
+        'comic': get_random_comic()
+    })
 
 
 def filters(request):
@@ -50,8 +49,11 @@ def suit_filter(request):
 
 @login_required
 def profile(request):
-    return render(request, 'profile.html', {
-        'games': WarGame.objects.filter(player=request.user)
+    return render(request, 'profile.html',
+                  {
+        'games': WarGame.objects.filter(player=request.user),
+        'wins': request.user.get_wins(),
+        'losses': request.user.get_losses()
     })
 
 
@@ -79,12 +81,7 @@ def register(request):
     if request.method == 'POST':
         form = EmailUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            text_content = 'Thank you for signing up for our website, {}'.format(user.username)
-            html_content = '<h2>Thanks {} for signing up!</h2> <div>I hope you enjoy using our site</div>'.format(user.username)
-            msg = EmailMultiAlternatives("Welcome!", text_content, settings.DEFAULT_FROM_EMAIL, [user.email])
-            msg.attach_alternative(html_content, "text/html")
-            msg.send()
+            form.save()
             return redirect("profile")
     else:
         form = EmailUserCreationForm()
@@ -108,3 +105,25 @@ def war(request):
         'dealer_cards': [dealer_card],
         'result': result
     })
+
+
+@login_required()
+def war_all(request):
+    return render(request, "war_all.html")
+
+
+# ajax
+@csrf_exempt
+def war_all_draw(request):
+    cards = Card.objects.order_by('?')
+    # b = serializers.serialize('json', [cards])
+    # print b
+    collection = []
+    for card in cards:
+        a = serializers.serialize('json', [card])
+        collection.append(a)
+    user_card_deck = collection[0:26]
+    dealer_card_deck = collection[26:52]
+    data = [user_card_deck, dealer_card_deck]
+    return HttpResponse(json.dumps(data),
+        content_type='application/json')

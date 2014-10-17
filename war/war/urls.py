@@ -18,8 +18,12 @@ urlpatterns = patterns('',
     url(r'^blackjack/$', 'cards.views.blackjack', name='blackjack'),
     url(r'^poker/$', 'cards.views.poker', name='poker'),
     url(r'^war/$', 'cards.views.war', name='war'),
+    url(r'^war_all/$', 'cards.views.war_all', name='war_all'),
 
+    # ajax
+    url(r'^war_all_draw/$', 'cards.views.war_all_draw', name='war_all_draw'),
 
+    # systematic
     url(r'^register/$', 'cards.views.register', name='register'),
     url(r'^login/$', 'django.contrib.auth.views.login', name='login'),
     url(r'^logout/$', 'django.contrib.auth.views.logout', name='logout'),

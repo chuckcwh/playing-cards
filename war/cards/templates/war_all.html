@@ -1,0 +1,22 @@
+{% extends 'base_template.html' %}
+{% load staticfiles %}
+
+{% block content %}
+
+    <h2>War! Battle to the end!</h2>
+    <button id="draw">Draw Cards</button><br>
+
+    <div style="float:left; margin-right: 50px;">
+        <h3>Player's Card</h3>
+        <div id="player_card"></div>
+    </div>
+
+    <div style="float: left;">
+        <h3>Dealer's Card</h3>
+        <div id="dealer_card"></div>
+    </div>
+    <img width="100px" src=""/>
+    <div style="clear:both;"></div>
+
+    <div style="margin-top:30px;" id="result"></div>
+{% endblock content %}

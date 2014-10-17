@@ -1,8 +1,18 @@
 {% extends 'base_template.html' %}
+{% load staticfiles %}
 
 {% block content %}
-    <p>Hi {{ user.username }}, you have 0 wins and 0 loses.</p>
+    <p>Hi {{ user.username }}, you have {{ wins }} wins and {{ losses }} loses.</p>
     <p>Your email address is {{ user.email }}</p>
+    {% if wins >= 5 %}
+    <div class="badge" style="display: inline"><img id='dialog_ppl' width='80' height='80' src="{% static 'img/five_badge.jpg' %}"></div>
+        {% if wins >= 10 %}
+    <div class="badge" style="display: inline"><img id='dialog_ppl' width='80' height='80' src="{% static 'img/ten_badge.jpg' %}"></div>
+            {% if wins >= 15 %}
+    <div class="badge" style="display: inline"><img id='dialog_ppl' width='80' height='80' src="{% static 'img/fifteen_badge.jpg' %}"></div>
+            {% endif %}
+        {% endif %}
+    {% endif %}
 
     <h2>Past Games</h2>
     {% for game in games %}
