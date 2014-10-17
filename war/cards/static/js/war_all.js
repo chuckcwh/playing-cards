@@ -1,4 +1,4 @@
-{% load staticfiles %}
+//{% load staticfiles %}
 $(document).ready(function(){
 var user_deck;
 var dealer_deck;
