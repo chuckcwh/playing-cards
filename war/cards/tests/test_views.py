@@ -3,7 +3,6 @@ from django.http import HttpResponseRedirect
 from django.test import TestCase
 from mock import patch, Mock
 from cards.models import Player, WarGame
-from cards.tests.factories import WarGameFactory
 from cards.utils import create_deck, get_random_comic
 
 
